@@ -25,6 +25,7 @@ public class User {
     private Integer entranceYear;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
