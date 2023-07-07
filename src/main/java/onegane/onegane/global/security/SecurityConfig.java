@@ -28,7 +28,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests()
-                    .antMatchers("/api/user/login").permitAll()
+                    .antMatchers("/api/auth/**").permitAll()
                     .antMatchers(authenticationList).hasRole("USER")
                     .anyRequest().authenticated();
 
