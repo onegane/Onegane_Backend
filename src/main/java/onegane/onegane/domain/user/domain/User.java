@@ -45,8 +45,7 @@ public class User {
         this.role = role;
     }
 
-    public User update(BsmUserResource resource) {
+    public void update(BsmUserResource resource) {
         this.name = resource.getNickname();
-        return this;
     }
 }
