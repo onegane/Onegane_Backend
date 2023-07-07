@@ -51,7 +51,8 @@ public class AuthSignupOrSigninService {
     public User save(BsmUserResource resource) {
         return userRepository.save(
                 User.builder()
-                    .studentNumber(resource.getUserCode())
+                    .grade(resource.getStudent().getGrade())
+                    .classNo(resource.getStudent().getClassNo())
                     .name(resource.getNickname())
                     .entranceYear(resource.getStudent().getEnrolledAt())
                     .email(resource.getEmail())
