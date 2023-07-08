@@ -1,4 +1,4 @@
-package onegane.onegane.global.security.auth;
+package onegane.onegane.global.config.security.auth;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.user.domain.User;
