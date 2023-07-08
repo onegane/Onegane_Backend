@@ -1,7 +1,6 @@
 package onegane.onegane.domain.history.domain;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.trackingNumber.domain.TrackingNumber;
 import onegane.onegane.domain.user.domain.User;
 import onegane.onegane.global.Entity.BaseTimeEntity;
@@ -10,7 +9,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
 public class History extends BaseTimeEntity {
 
     @Id

@@ -3,13 +3,14 @@ package onegane.onegane.domain.user.domain;
 import leehj050211.bsmOauth.dto.resource.BsmUserResource;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
