@@ -1,4 +1,4 @@
-package onegane.onegane.global.security;
+package onegane.onegane.global.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
