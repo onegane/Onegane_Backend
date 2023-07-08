@@ -32,15 +32,21 @@ public class AuthSignupOrSigninService {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public TokenResponseDto login(String authCode) throws IOException, BsmOAuthTokenNotFoundException, BsmOAuthCodeNotFoundException, BsmOAuthInvalidClientException {
         BsmOauth bsmOauth = new BsmOauth(bsmClientId, bsmClientSecret);
         String token = bsmOauth.getToken(authCode);
         BsmUserResource resource = bsmOauth.getResource(token);
+
+        String accessToken = jwtProvider.createAccessToken(resource.getEmail(), JwtProperties.ACCESS_TOKEN_EXPIRED);
+        String refreshToken = jwtProvider.createRefreshToken(resource.getEmail(), JwtProperties.REFRESH_TOKEN_EXPIRED);
+        refreshTokenService.saveRefreshToken(resource.getEmail(), accessToken, refreshToken);
+
         return TokenResponseDto.builder()
-                .accessToken(jwtProvider.createAccessToken(resource.getEmail(), JwtProperties.ACCESS_TOKEN_EXPIRED))
-                .refreshToken(jwtProvider.createRefreshToken(resource.getEmail(), JwtProperties.REFRESH_TOKEN_EXPIRED))
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .userResponseDto(updateOrSave(resource))
                 .build();
     }
