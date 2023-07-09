@@ -40,8 +40,8 @@ public class AuthSignupOrSigninService {
         String token = bsmOauth.getToken(authCode);
         BsmUserResource resource = bsmOauth.getResource(token);
 
-        String accessToken = jwtProvider.createAccessToken(resource.getEmail(), JwtProperties.ACCESS_TOKEN_EXPIRED);
-        String refreshToken = jwtProvider.createRefreshToken(resource.getEmail(), JwtProperties.REFRESH_TOKEN_EXPIRED);
+        String accessToken = jwtProvider.createAccessToken(resource.getEmail());
+        String refreshToken = jwtProvider.createRefreshToken(resource.getEmail());
         refreshTokenService.saveRefreshToken(resource.getEmail(), accessToken, refreshToken);
 
         return TokenResponseDto.builder()

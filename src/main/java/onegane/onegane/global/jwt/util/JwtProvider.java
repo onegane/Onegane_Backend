@@ -26,12 +26,12 @@ public class JwtProvider {
 
     private final AuthDetailsService authDetailsService;
 
-    public String createAccessToken(String email, Long time) {
-        return createToken(email, time);
+    public String createAccessToken(String email) {
+        return createToken(email, JwtProperties.ACCESS_TOKEN_EXPIRED);
     }
 
-    public String createRefreshToken(String email, Long time) {
-        return createToken(email, time);
+    public String createRefreshToken(String email) {
+        return createToken(email, JwtProperties.REFRESH_TOKEN_EXPIRED);
     }
 
     private String createToken(String email, Long time) {
