@@ -15,6 +15,12 @@ public class History extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Long trackingNumber;
+
+    @Column(nullable = false)
+    private String parcelNickname;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private State state;
 
