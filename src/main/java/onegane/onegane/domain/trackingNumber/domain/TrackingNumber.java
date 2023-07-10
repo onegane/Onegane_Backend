@@ -1,7 +1,8 @@
 package onegane.onegane.domain.trackingNumber.domain;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import onegane.onegane.domain.user.domain.User;
 import onegane.onegane.global.Entity.BaseTimeEntity;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class TrackingNumber extends BaseTimeEntity {
 
     @Id
@@ -18,6 +20,22 @@ public class TrackingNumber extends BaseTimeEntity {
     @Column(nullable = false)
     private Long trackingNumber;
 
+    @Column(nullable = false)
+    private String nickname;
+
     @ManyToOne
     private User user;
+
+    @Builder
+    public TrackingNumber(Long trackingNumber, String nickname, User user) {
+        this.trackingNumber = trackingNumber;
+        this.nickname = nickname;
+        this.user = user;
+    }
+
+    public TrackingNumber update(Long trackingNumber, String nickname) {
+        this.trackingNumber = trackingNumber;
+        this.nickname = nickname;
+        return this;
+    }
 }
