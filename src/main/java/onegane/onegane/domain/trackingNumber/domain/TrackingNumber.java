@@ -32,4 +32,10 @@ public class TrackingNumber extends BaseTimeEntity {
         this.nickname = nickname;
         this.user = user;
     }
+
+    public TrackingNumber update(Long trackingNumber, String nickname) {
+        this.trackingNumber = trackingNumber;
+        this.nickname = nickname;
+        return this;
+    }
 }
