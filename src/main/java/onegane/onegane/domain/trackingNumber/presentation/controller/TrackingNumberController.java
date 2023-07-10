@@ -25,9 +25,14 @@ public class TrackingNumberController {
         return trackingNumberInsertService.insert(request, dto);
     }
 
-    @PutMapping("/:id")
-    public ResponseEntity updateTrackingNumber(@PathVariable Long id,
+    @PutMapping("/{id}")
+    public ResponseEntity updateTrackingNumber(@PathVariable("id") Long id,
                                                @RequestBody TrackingNumberRequestDto dto) {
         return trackingNumberUpdateService.update(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteTrackingNumber(@PathVariable("id") Long id) {
+        return trackingNumberDeleteService.delete(id);
     }
 }
