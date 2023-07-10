@@ -2,6 +2,7 @@ package onegane.onegane.domain.trackingNumber.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.trackingNumber.presentation.dto.TrackingNumberRequestDto;
+import onegane.onegane.domain.trackingNumber.service.TrackingNumberDeleteService;
 import onegane.onegane.domain.trackingNumber.service.TrackingNumberInsertService;
 import onegane.onegane.domain.trackingNumber.service.TrackingNumberUpdateService;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ public class TrackingNumberController {
 
     private final TrackingNumberInsertService trackingNumberInsertService;
     private final TrackingNumberUpdateService trackingNumberUpdateService;
+    private final TrackingNumberDeleteService trackingNumberDeleteService;
 
     @PostMapping(value = {"", "/"})
     public ResponseEntity insertTrackingNumber(HttpServletRequest request,
@@ -23,9 +25,9 @@ public class TrackingNumberController {
         return trackingNumberInsertService.insert(request, dto);
     }
 
-    @PutMapping(value = {"", "/"})
-    public ResponseEntity updateTrackingNumber(HttpServletRequest request,
+    @PutMapping("/:id")
+    public ResponseEntity updateTrackingNumber(@PathVariable Long id,
                                                @RequestBody TrackingNumberRequestDto dto) {
-        return trackingNumberUpdateService.update(request, dto);
+        return trackingNumberUpdateService.update(id, dto);
     }
 }

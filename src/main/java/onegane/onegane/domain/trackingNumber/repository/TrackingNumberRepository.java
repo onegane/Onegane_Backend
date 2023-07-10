@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface TrackingNumberRepository extends JpaRepository<TrackingNumber, Long> {
 
-    Optional<TrackingNumber> findByUserId(Long id);
+    Optional<TrackingNumber> deleteByUserId(Long id);
 }

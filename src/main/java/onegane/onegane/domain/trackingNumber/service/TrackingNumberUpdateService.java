@@ -18,15 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 public class TrackingNumberUpdateService {
 
     private final TrackingNumberRepository trackingNumberRepository;
-    private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
 
     @Transactional
-    public ResponseEntity update(HttpServletRequest request, TrackingNumberRequestDto dto) {
-        String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
-        String email = jwtProvider.extractEmail(accessToken);
-        Long userId = userRepository.findByEmail(email).get().getId();
-        TrackingNumber trackingNumber = trackingNumberRepository.findByUserId(userId).get();
+    public ResponseEntity update(Long id, TrackingNumberRequestDto dto) {
+        TrackingNumber trackingNumber = trackingNumberRepository.findById(id).get();
         trackingNumberRepository.save(trackingNumber.update(dto.getTrackingNumber(), dto.getNickname()));
         return ResponseEntity.ok("success");
     }
