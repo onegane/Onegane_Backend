@@ -1,14 +1,16 @@
 package onegane.onegane.domain.user.domain;
 
+import leehj050211.bsmOauth.dto.resource.BsmUserResource;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -16,7 +18,10 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private Integer studentNumber;
+    private Integer grade;
+
+    @Column(nullable = false)
+    private Integer classNo;
 
     @Column(nullable = false)
     private String name;
@@ -25,14 +30,23 @@ public class User {
     private Integer entranceYear;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public User(Integer studentNumber, String name, Integer entranceYear, Role role) {
-        this.studentNumber = studentNumber;
+    public User(Integer grade, Integer classNo, String name, Integer entranceYear, String email, Role role) {
+        this.grade = grade;
+        this.classNo = classNo;
         this.name = name;
         this.entranceYear = entranceYear;
+        this.email = email;
         this.role = role;
+    }
+
+    public void update(BsmUserResource resource) {
+        this.name = resource.getNickname();
     }
 }

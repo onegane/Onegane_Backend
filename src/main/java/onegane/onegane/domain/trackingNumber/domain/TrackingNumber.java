@@ -9,7 +9,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
 public class TrackingNumber extends BaseTimeEntity {
 
     @Id
