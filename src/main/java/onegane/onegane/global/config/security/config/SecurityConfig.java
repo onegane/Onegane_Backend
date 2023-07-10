@@ -1,4 +1,4 @@
-package onegane.onegane.global.config.security;
+package onegane.onegane.global.config.security.config;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.global.jwt.filter.JwtAuthenticationFilter;
@@ -24,6 +24,10 @@ public class SecurityConfig {
             "/api/auth/logout"
     };
 
+    private final String[] whiteList = {
+            "/api/auth/bsm"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -35,7 +39,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests()
-                    .antMatchers("/api/auth/bsm").permitAll()
+                    .antMatchers(whiteList).permitAll()
                     .antMatchers(authenticationList).hasRole("USER")
                     .anyRequest().authenticated();
 

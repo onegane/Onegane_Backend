@@ -20,7 +20,9 @@ public class RefreshToken {
 
     private String refreshToken;
 
-    public void updateAccessToken(String token) {
-        this.accessToken = token;
+    public RefreshToken update(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        return this;
     }
 }
