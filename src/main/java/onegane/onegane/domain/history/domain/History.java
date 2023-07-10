@@ -1,7 +1,6 @@
 package onegane.onegane.domain.history.domain;
 
 import lombok.Getter;
-import onegane.onegane.domain.trackingNumber.domain.TrackingNumber;
 import onegane.onegane.domain.user.domain.User;
 import onegane.onegane.global.Entity.BaseTimeEntity;
 
@@ -19,12 +18,6 @@ public class History extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @Column(nullable = false)
-    private String nickname;
-
     @ManyToOne
     private User user;
-
-    @OneToOne
-    private TrackingNumber trackingNumber;
 }
