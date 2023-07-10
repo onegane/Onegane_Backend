@@ -8,6 +8,7 @@ import onegane.onegane.domain.user.repository.UserRepository;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +20,7 @@ public class TrackingNumberInsertService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
+    @Transactional
     public ResponseEntity insert(HttpServletRequest request, TrackingNumberRequestDto dto) {
         String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
         String email = jwtProvider.extractEmail(accessToken);
