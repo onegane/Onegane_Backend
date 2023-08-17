@@ -11,7 +11,6 @@ import onegane.onegane.domain.user.domain.User;
 import onegane.onegane.domain.user.presentation.dto.UserResponseDto;
 import onegane.onegane.domain.user.repository.UserRepository;
 import onegane.onegane.global.jwt.dto.TokenResponseDto;
-import onegane.onegane.global.jwt.util.JwtProperties;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
