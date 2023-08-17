@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.auth.domain.RefreshToken;
 import onegane.onegane.domain.auth.repository.RefreshTokenRepository;
 import onegane.onegane.domain.user.presentation.dto.UserResponseDto;
+import onegane.onegane.domain.user.service.GetUserOneService;
 import onegane.onegane.global.jwt.dto.TokenResponseDto;
-import onegane.onegane.global.jwt.exception.InvalidRefreshTokenInfoException;
 import onegane.onegane.global.jwt.util.JwtProvider;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +20,18 @@ import java.util.Optional;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final GetUserOneService getUserOneService;
     private final JwtProvider jwtProvider;
 
     @Transactional
     public void saveRefreshToken(String email, String accessToken, String refreshToken) {
-        refreshTokenRepository.save(new RefreshToken(email, accessToken, refreshToken));
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                    .id(email)
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build()
+        );
     }
 
     @Transactional
@@ -38,9 +47,21 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public TokenResponseDto updateAccessToken(HttpServletRequest request) {
+    public ResponseEntity<?> updateAccessToken(HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
         String refreshToken = request.getHeader("Authorization-Refresh").split(" ")[1].trim();
+
+        if (refreshTokenRepository.findByAccessToken(accessToken).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("토큰이 DB에 존재하지 않습니다.");
+        }
+
         String parsingEmail = jwtProvider.extractEmail(refreshToken);
+
+        if (refreshTokenRepository.findById(parsingEmail).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("토큰에서 이메일이 추출되지 않습니다.");
+        }
 
         if (refreshTokenRepository.findById(parsingEmail).get().getRefreshToken().equals(refreshToken)) {
             String newAccessToken = jwtProvider.createAccessToken(parsingEmail);
@@ -51,13 +72,18 @@ public class RefreshTokenService {
                     .get()
                     .update(newAccessToken, newRefreshToken);
 
-            return TokenResponseDto.builder()
-                    .accessToken(updateRefreshToken.getAccessToken())
-                    .refreshToken(updateRefreshToken.getRefreshToken())
-                    .userResponseDto(new UserResponseDto())
-                    .build();
+            refreshTokenRepository.save(updateRefreshToken);
+
+            return ResponseEntity.ok(
+                    TokenResponseDto.builder()
+                        .accessToken(updateRefreshToken.getAccessToken())
+                        .refreshToken(updateRefreshToken.getRefreshToken())
+                        .userResponseDto(new UserResponseDto(getUserOneService.execute(parsingEmail)))
+                        .build()
+            );
         }
 
-        throw new InvalidRefreshTokenInfoException("Refresh Token의 정보가 잘못되었습니다.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("토큰이 올바르지 않습니다.");
     }
 }

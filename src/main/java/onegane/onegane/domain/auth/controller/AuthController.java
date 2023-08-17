@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PutMapping("/refresh")
-    public ResponseEntity<TokenResponseDto> updateAccessToken(HttpServletRequest request) {
-        return ResponseEntity.ok(refreshTokenService.updateAccessToken(request));
+    public ResponseEntity<?> updateAccessToken(HttpServletRequest request) {
+        return refreshTokenService.updateAccessToken(request);
     }
 }
