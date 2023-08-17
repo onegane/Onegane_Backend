@@ -29,12 +29,12 @@ public class AuthController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         return ResponseEntity.ok(authLogoutService.logout(request));
     }
 
     @PutMapping("/refresh")
-    public ResponseEntity<TokenResponseDto> updateAccessToken(HttpServletRequest request) {
-        return ResponseEntity.ok(refreshTokenService.updateAccessToken(request));
+    public ResponseEntity<?> updateAccessToken(HttpServletRequest request) {
+        return refreshTokenService.updateAccessToken(request);
     }
 }

@@ -12,7 +12,7 @@ public class AuthLogoutService {
 
     private final RefreshTokenService refreshTokenService;
 
-    public ResponseEntity logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization").split(" ")[1];
 
         if (refreshTokenService.removeRefreshToken(accessToken)) {
