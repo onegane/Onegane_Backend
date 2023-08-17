@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         return ResponseEntity.ok(authLogoutService.logout(request));
     }
 
