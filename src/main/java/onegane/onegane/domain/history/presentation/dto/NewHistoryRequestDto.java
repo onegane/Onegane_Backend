@@ -9,13 +9,13 @@ import onegane.onegane.domain.user.domain.User;
 
 @Getter
 @NoArgsConstructor
-public class HistoryRequestDto {
+public class NewHistoryRequestDto {
 
     private Long trackingNumber;
     private String parcelNickname;
 
     @Builder
-    public HistoryRequestDto(Long trackingNumber, String parcelNickname) {
+    public NewHistoryRequestDto(Long trackingNumber, String parcelNickname) {
         this.trackingNumber = trackingNumber;
         this.parcelNickname = parcelNickname;
     }

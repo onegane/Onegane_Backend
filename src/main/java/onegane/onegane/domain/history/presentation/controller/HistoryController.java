@@ -1,8 +1,9 @@
 package onegane.onegane.domain.history.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
-import onegane.onegane.domain.history.presentation.dto.HistoryRequestDto;
+import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
 import onegane.onegane.domain.history.presentation.dto.HistoryResponseDto;
+import onegane.onegane.domain.history.presentation.dto.SaveHistoryResponseDto;
 import onegane.onegane.domain.history.service.HistoryDeleteService;
 import onegane.onegane.domain.history.service.HistoryGetService;
 import onegane.onegane.domain.history.service.HistoryInsertService;
@@ -23,20 +24,20 @@ public class HistoryController{
     private final HistoryUpdateService historyUpdateService;
     private final HistoryDeleteService historyDeleteService;
 
-    @GetMapping(value = {"", "/"})
+    @GetMapping
     public ResponseEntity<List<HistoryResponseDto>> getHistory(HttpServletRequest request) {
         return ResponseEntity.ok(historyGetService.findAll(request));
     }
 
-    @PostMapping(value = {"", "/"})
-    public ResponseEntity insertHistory(HttpServletRequest request,
-                                               @RequestBody HistoryRequestDto dto) {
-        return historyInsertService.insert(request, dto);
+    @PostMapping
+    public ResponseEntity<SaveHistoryResponseDto> insertHistory(HttpServletRequest request,
+                                                                @RequestBody NewHistoryRequestDto dto) {
+        return ResponseEntity.ok(historyInsertService.insert(request, dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateHistory(@PathVariable("id") Long id,
-                                               @RequestBody HistoryRequestDto dto) {
+                                               @RequestBody NewHistoryRequestDto dto) {
         return historyUpdateService.update(id, dto);
     }
 

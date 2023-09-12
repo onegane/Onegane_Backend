@@ -2,7 +2,6 @@ package onegane.onegane.domain.history.service;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
-import onegane.onegane.domain.history.presentation.dto.HistoryRequestDto;
 import onegane.onegane.domain.history.presentation.dto.HistoryResponseDto;
 import onegane.onegane.domain.history.repository.HistoryRepository;
 import onegane.onegane.domain.user.repository.UserRepository;
