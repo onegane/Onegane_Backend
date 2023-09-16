@@ -8,4 +8,4 @@ COPY ${JAR_FILE} onegane.jar
 
 EXPOSE 8090
 
-CMD ["java", "-jar", "onegane.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "onegane.jar"]
