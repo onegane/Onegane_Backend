@@ -6,6 +6,6 @@ ARG JAR_FILE=build/libs/*.jar
 
 COPY ${JAR_FILE} onegane.jar
 
-EXPOSE 8090
+EXPOSE 8080
 
 CMD ["java", "-jar", "-Dspring.profiles.active=prod", "onegane.jar"]
