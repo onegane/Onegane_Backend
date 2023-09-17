@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.FormLoginC
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -40,16 +40,16 @@ public class SecurityConfig {
                 .httpBasic(HttpBasicConfigurer::disable)
                 .formLogin(FormLoginConfigurer::disable)
                 .csrf(CsrfConfigurer::disable)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
 
-        http
                 .authorizeHttpRequests()
                     .antMatchers(whiteList).permitAll()
                     .antMatchers(authenticationList).hasRole("USER")
-                    .anyRequest().authenticated();
+                    .anyRequest().authenticated()
+                .and()
 
-        http
-                .addFilterBefore(jwtAuthenticationFilter, OncePerRequestFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
