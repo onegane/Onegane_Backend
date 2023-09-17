@@ -1,7 +1,6 @@
 package onegane.onegane.global.jwt.filter;
 
 import lombok.RequiredArgsConstructor;
-import onegane.onegane.domain.auth.service.RefreshTokenService;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
