@@ -34,7 +34,7 @@ public class HistoryController{
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateHistory(@PathVariable("id") Long id,
+    public ResponseEntity<?> updateHistory(@PathVariable("id") Long id,
                                         @RequestBody NewHistoryRequestDto dto) {
         return historyUpdateService.update(id, dto);
     }

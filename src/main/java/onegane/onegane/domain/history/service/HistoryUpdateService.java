@@ -4,20 +4,39 @@ import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
 import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
 import onegane.onegane.domain.history.repository.HistoryRepository;
+import onegane.onegane.global.exception.domain.ApiErrorResult;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class HistoryUpdateService {
 
     private final HistoryRepository historyRepository;
 
-    @Transactional
-    public ResponseEntity update(Long id, NewHistoryRequestDto dto) {
-        History history = historyRepository.findById(id).get();
-        historyRepository.save(history.update(dto.getTrackingNumber(), dto.getParcelNickname()));
-        return ResponseEntity.ok("success");
+    public ResponseEntity<?> update(Long id, NewHistoryRequestDto dto) {
+        Optional<History> getHistory = historyRepository.findById(id);
+
+        if (getHistory.isPresent()) {
+            History history = getHistory.get();
+
+            return ResponseEntity.ok(
+                    historyRepository.save(history.update(dto.getTrackingNumber(), dto.getParcelNickname())).getId()
+            );
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiErrorResult.builder()
+                                .status("HistoryNotFound")
+                                .message("택배 내역이 존재하지 않습니다.")
+                                .build()
+                );
     }
 }
