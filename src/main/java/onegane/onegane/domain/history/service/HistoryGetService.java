@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
 import onegane.onegane.domain.history.presentation.dto.HistoryResponseDto;
 import onegane.onegane.domain.history.repository.HistoryRepository;
+import onegane.onegane.domain.user.domain.User;
 import onegane.onegane.domain.user.repository.UserRepository;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
 import onegane.onegane.global.jwt.util.JwtProvider;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +27,10 @@ public class HistoryGetService {
 
     public ResponseEntity<?> findAll(HttpServletRequest request) {
         String token = request.getHeader("Authorization").split(" ")[1].trim();
+        Optional<User> getUser = userRepository.findByEmail(jwtProvider.extractEmail(token));
 
-        if (userRepository.findByEmail(jwtProvider.extractEmail(token)).isPresent()) {
-            Long userId = userRepository.findByEmail(jwtProvider.extractEmail(token)).get().getId();
+        if (getUser.isPresent()) {
+            Long userId = getUser.get().getId();
             List<History> history = historyRepository.findAllByUserId(userId);
 
             return ResponseEntity.ok(
