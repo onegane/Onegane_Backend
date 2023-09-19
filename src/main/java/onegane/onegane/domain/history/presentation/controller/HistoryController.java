@@ -2,7 +2,6 @@ package onegane.onegane.domain.history.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
-import onegane.onegane.domain.history.presentation.dto.HistoryResponseDto;
 import onegane.onegane.domain.history.presentation.dto.SaveHistoryResponseDto;
 import onegane.onegane.domain.history.service.HistoryDeleteService;
 import onegane.onegane.domain.history.service.HistoryGetService;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/number")
@@ -25,8 +23,8 @@ public class HistoryController{
     private final HistoryDeleteService historyDeleteService;
 
     @GetMapping
-    public ResponseEntity<List<HistoryResponseDto>> getHistory(HttpServletRequest request) {
-        return ResponseEntity.ok(historyGetService.findAll(request));
+    public ResponseEntity<?> getHistory(HttpServletRequest request) {
+        return historyGetService.findAll(request);
     }
 
     @PostMapping
@@ -37,7 +35,7 @@ public class HistoryController{
 
     @PutMapping("/{id}")
     public ResponseEntity updateHistory(@PathVariable("id") Long id,
-                                               @RequestBody NewHistoryRequestDto dto) {
+                                        @RequestBody NewHistoryRequestDto dto) {
         return historyUpdateService.update(id, dto);
     }
 
