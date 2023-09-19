@@ -40,7 +40,7 @@ public class HistoryController{
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteHistory(@PathVariable("id") Long id) {
-        return historyDeleteService.delete(id);
+    public ResponseEntity<Long> deleteHistory(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(historyDeleteService.delete(id));
     }
 }
