@@ -1,6 +1,7 @@
 package onegane.onegane.global.jwt.filter;
 
 import lombok.RequiredArgsConstructor;
+import onegane.onegane.global.jwt.dto.TokenFilterResponse;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
@@ -33,10 +34,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             refreshToken = authorizationRefreshHeader.split(" ")[1].trim();
         }
 
-        if (accessToken != null && refreshToken != null
-            && jwtProvider.isValid(accessToken, response) && jwtProvider.isValid(refreshToken, response)) {
-            Authentication authentication = jwtProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        TokenFilterResponse accessTokenResult = jwtProvider.isValid(accessToken);
+        TokenFilterResponse refreshTokenResult = jwtProvider.isValid(refreshToken);
+
+        if (accessToken != null ) {
+            if (accessTokenResult != null && !accessTokenResult.getIsValid()) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, accessTokenResult.getMessage());
+                return;
+            } else {
+                Authentication authentication = jwtProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+
+        if (refreshToken != null && (refreshTokenResult != null && !refreshTokenResult.getIsValid())) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, refreshTokenResult.getMessage());
+            return;
         }
 
         filterChain.doFilter(request, response);

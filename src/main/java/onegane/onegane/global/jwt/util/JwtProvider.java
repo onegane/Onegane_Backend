@@ -6,13 +6,12 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.global.config.security.auth.AuthDetails;
 import onegane.onegane.global.config.security.auth.AuthDetailsService;
+import onegane.onegane.global.jwt.dto.TokenFilterResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -53,34 +52,42 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public boolean isValid(String token, HttpServletResponse response) throws IOException {
-        String errorMessage = "Invalid JWT.";
-
+    public TokenFilterResponse isValid(String token) {
         try {
             Jwts.parser()
                     .setSigningKey(getSigningKey(secretKey))
                     .parseClaimsJws(token)
                     .getBody();
-            return true;
-        } catch (JwtException e) {
-            if (e instanceof SignatureException) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Signature.");
-            } else if (e instanceof MalformedJwtException) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, errorMessage);
-            } else if (e instanceof ExpiredJwtException) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired JWT.");
-            } else if (e instanceof UnsupportedJwtException) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unsupported JWT.");
-            } else {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, errorMessage);
-            }
-        } catch (IllegalArgumentException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT claims string is empty.");
-        } catch (NullPointerException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT RefreshToken is empty.");
+            return TokenFilterResponse.builder()
+                    .isValid(true)
+                    .message("토큰이 정상적입니다.")
+                    .build();
+        } catch (SignatureException e) {
+            return TokenFilterResponse.builder()
+                    .isValid(false)
+                    .message("토큰의 시그니쳐가 올바르지 않습니다.")
+                    .build();
+        } catch (MalformedJwtException e) {
+            return TokenFilterResponse.builder()
+                    .isValid(false)
+                    .message("JWT의 형식이 유효하지 않습니다.")
+                    .build();
+        } catch (ExpiredJwtException e) {
+            return TokenFilterResponse.builder()
+                    .isValid(false)
+                    .message("JWT가 만료되었습니다.")
+                    .build();
+        } catch (UnsupportedJwtException e) {
+            return TokenFilterResponse.builder()
+                    .isValid(false)
+                    .message("지원되지 않는 JWT입니다.")
+                    .build();
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return TokenFilterResponse.builder()
+                    .isValid(false)
+                    .message("매개변수의 자료형이 잘못되었거나 존재하지 않습니다.")
+                    .build();
         }
-
-        return false;
     }
 
     public Authentication getAuthentication(String token) {
