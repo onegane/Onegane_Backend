@@ -2,7 +2,6 @@ package onegane.onegane.domain.history.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
-import onegane.onegane.domain.history.presentation.dto.SaveHistoryResponseDto;
 import onegane.onegane.domain.history.service.HistoryDeleteService;
 import onegane.onegane.domain.history.service.HistoryGetService;
 import onegane.onegane.domain.history.service.HistoryInsertService;
@@ -28,9 +27,9 @@ public class HistoryController{
     }
 
     @PostMapping
-    public ResponseEntity<SaveHistoryResponseDto> insertHistory(HttpServletRequest request,
-                                                                @RequestBody NewHistoryRequestDto dto) {
-        return ResponseEntity.ok(historyInsertService.insert(request, dto));
+    public ResponseEntity<?> insertHistory(HttpServletRequest request,
+                                           @RequestBody NewHistoryRequestDto dto) {
+        return historyInsertService.insert(request, dto);
     }
 
     @PutMapping("/{id}")

@@ -7,11 +7,15 @@ import onegane.onegane.domain.history.presentation.dto.SaveHistoryResponseDto;
 import onegane.onegane.domain.history.repository.HistoryRepository;
 import onegane.onegane.domain.user.domain.User;
 import onegane.onegane.domain.user.repository.UserRepository;
+import onegane.onegane.global.exception.domain.ApiErrorResult;
 import onegane.onegane.global.jwt.util.JwtProvider;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +26,23 @@ public class HistoryInsertService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public SaveHistoryResponseDto insert(HttpServletRequest request, NewHistoryRequestDto dto) {
+    public ResponseEntity<?> insert(HttpServletRequest request, NewHistoryRequestDto dto) {
         String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
         String email = jwtProvider.extractEmail(accessToken);
-        User user = userRepository.findByEmail(email).get();
-        return new SaveHistoryResponseDto(historyRepository.save(dto.toEntity(user, State.WAITING)));
+        Optional<User> getUser = userRepository.findByEmail(email);
+
+        if (getUser.isPresent()) {
+            return ResponseEntity.ok(
+                new SaveHistoryResponseDto(historyRepository.save(dto.toEntity(getUser.get(), State.WAITING)))
+            );
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ApiErrorResult.builder()
+                        .status("UserNotFound")
+                        .message("해당 유저가 존재하지 않습니다.")
+                        .build()
+                );
     }
 }
