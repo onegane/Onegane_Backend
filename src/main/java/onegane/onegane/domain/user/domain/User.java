@@ -4,7 +4,6 @@ import leehj050211.bsmOauth.dto.resource.BsmUserResource;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
@@ -46,7 +45,8 @@ public class User {
         this.role = role;
     }
 
-    public void update(BsmUserResource resource) {
+    public User update(BsmUserResource resource) {
         this.name = resource.getNickname();
+        return this;
     }
 }

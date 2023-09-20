@@ -3,8 +3,6 @@ package onegane.onegane.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.auth.domain.RefreshToken;
 import onegane.onegane.domain.auth.repository.RefreshTokenRepository;
-import onegane.onegane.domain.user.presentation.dto.UserResponseDto;
-import onegane.onegane.domain.user.service.GetUserOneService;
 import onegane.onegane.global.jwt.dto.TokenResponseDto;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import java.util.Optional;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final GetUserOneService getUserOneService;
     private final JwtProvider jwtProvider;
 
     @Transactional
@@ -57,20 +54,18 @@ public class RefreshTokenService {
         }
 
         String parsingEmail = jwtProvider.extractEmail(refreshToken);
+        Optional<RefreshToken> getToken = refreshTokenRepository.findById(parsingEmail);
 
-        if (refreshTokenRepository.findById(parsingEmail).isEmpty()) {
+        if (getToken.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("토큰에서 이메일이 추출되지 않습니다.");
         }
 
-        if (refreshTokenRepository.findById(parsingEmail).get().getRefreshToken().equals(refreshToken)) {
+        if (getToken.get().getRefreshToken().equals(refreshToken)) {
             String newAccessToken = jwtProvider.createAccessToken(parsingEmail);
             String newRefreshToken = jwtProvider.createRefreshToken(parsingEmail);
 
-            RefreshToken updateRefreshToken = refreshTokenRepository
-                    .findById(parsingEmail)
-                    .get()
-                    .update(newAccessToken, newRefreshToken);
+            RefreshToken updateRefreshToken = getToken.get().update(newAccessToken, newRefreshToken);
 
             refreshTokenRepository.save(updateRefreshToken);
 
@@ -78,7 +73,6 @@ public class RefreshTokenService {
                     TokenResponseDto.builder()
                         .accessToken(updateRefreshToken.getAccessToken())
                         .refreshToken(updateRefreshToken.getRefreshToken())
-                        .userResponseDto(new UserResponseDto(getUserOneService.execute(parsingEmail)))
                         .build()
             );
         }

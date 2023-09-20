@@ -8,7 +8,6 @@ import leehj050211.bsmOauth.exception.BsmOAuthTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.user.domain.Role;
 import onegane.onegane.domain.user.domain.User;
-import onegane.onegane.domain.user.presentation.dto.UserResponseDto;
 import onegane.onegane.domain.user.repository.UserRepository;
 import onegane.onegane.global.jwt.dto.TokenResponseDto;
 import onegane.onegane.global.jwt.util.JwtProvider;
@@ -21,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthSignupOrSigninService {
 
     @Value("${bsm.client-id}")
@@ -33,7 +33,6 @@ public class AuthSignupOrSigninService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
 
-    @Transactional
     public TokenResponseDto login(String authCode) throws IOException, BsmOAuthTokenNotFoundException, BsmOAuthCodeNotFoundException, BsmOAuthInvalidClientException {
         BsmOauth bsmOauth = new BsmOauth(bsmClientId, bsmClientSecret);
         String token = bsmOauth.getToken(authCode);
@@ -42,35 +41,26 @@ public class AuthSignupOrSigninService {
         String accessToken = jwtProvider.createAccessToken(resource.getEmail());
         String refreshToken = jwtProvider.createRefreshToken(resource.getEmail());
         refreshTokenService.saveRefreshToken(resource.getEmail(), accessToken, refreshToken);
+        updateOrSave(resource);
 
         return TokenResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .userResponseDto(updateOrSave(resource))
                 .build();
     }
 
-    @Transactional
-    public UserResponseDto updateOrSave(BsmUserResource resource) {
+    public void updateOrSave(BsmUserResource resource) {
         Optional<User> user = userRepository.findByEmail(resource.getEmail());
 
         if (user.isEmpty()) {
-            user = Optional.ofNullable(save(resource));
+            save(resource);
         } else {
-            user.get().update(resource);
+            userRepository.save(user.get().update(resource));
         }
-
-        return UserResponseDto.builder()
-                .grade(user.get().getGrade())
-                .classNo(user.get().getClassNo())
-                .email(user.get().getEmail())
-                .name(user.get().getName())
-                .build();
     }
 
-    @Transactional
-    public User save(BsmUserResource resource) {
-        return userRepository.save(
+    public void save(BsmUserResource resource) {
+        userRepository.save(
                 User.builder()
                     .grade(resource.getStudent().getGrade())
                     .classNo(resource.getStudent().getClassNo())
