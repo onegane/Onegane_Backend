@@ -26,8 +26,9 @@ class RefreshTokenRepositoryTest {
     public void create() {
         // given
         String email = "asdf@gmail.com";
-        String accessToken = jwtProvider.createAccessToken(email);
-        String refreshToken = jwtProvider.createRefreshToken(email);
+        String userName = "asdf";
+        String accessToken = jwtProvider.createAccessToken(email, userName);
+        String refreshToken = jwtProvider.createRefreshToken(email, userName);
         RefreshToken refreshTokenObject = new RefreshToken(email, accessToken, refreshToken);
 
         // when

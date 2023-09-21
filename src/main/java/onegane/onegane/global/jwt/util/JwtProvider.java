@@ -25,17 +25,18 @@ public class JwtProvider {
 
     private final AuthDetailsService authDetailsService;
 
-    public String createAccessToken(String email) {
-        return createToken(email, JwtProperties.ACCESS_TOKEN_EXPIRED);
+    public String createAccessToken(String email, String userName) {
+        return createToken(email, userName, JwtProperties.ACCESS_TOKEN_EXPIRED);
     }
 
-    public String createRefreshToken(String email) {
-        return createToken(email, JwtProperties.REFRESH_TOKEN_EXPIRED);
+    public String createRefreshToken(String email, String userName) {
+        return createToken(email, userName, JwtProperties.REFRESH_TOKEN_EXPIRED);
     }
 
-    private String createToken(String email, Long time) {
+    private String createToken(String email, String userName, Long time) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
+        claims.put("userName", userName);
 
         Date now = new Date();
 

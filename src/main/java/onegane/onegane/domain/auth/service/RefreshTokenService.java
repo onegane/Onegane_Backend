@@ -3,6 +3,7 @@ package onegane.onegane.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.auth.domain.RefreshToken;
 import onegane.onegane.domain.auth.repository.RefreshTokenRepository;
+import onegane.onegane.domain.user.service.GetUserOneService;
 import onegane.onegane.global.jwt.dto.TokenResponseDto;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProvider jwtProvider;
+    private final GetUserOneService getUserOneService;
 
     @Transactional
     public void saveRefreshToken(String email, String accessToken, String refreshToken) {
@@ -55,6 +57,7 @@ public class RefreshTokenService {
 
         String parsingEmail = jwtProvider.extractEmail(refreshToken);
         Optional<RefreshToken> getToken = refreshTokenRepository.findById(parsingEmail);
+        String userName = getUserOneService.execute(parsingEmail).getName();
 
         if (getToken.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -62,8 +65,8 @@ public class RefreshTokenService {
         }
 
         if (getToken.get().getRefreshToken().equals(refreshToken)) {
-            String newAccessToken = jwtProvider.createAccessToken(parsingEmail);
-            String newRefreshToken = jwtProvider.createRefreshToken(parsingEmail);
+            String newAccessToken = jwtProvider.createAccessToken(parsingEmail, userName);
+            String newRefreshToken = jwtProvider.createRefreshToken(parsingEmail, userName);
 
             RefreshToken updateRefreshToken = getToken.get().update(newAccessToken, newRefreshToken);
 
