@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final String[] whiteList = {
             "/api/auth/bsm",
-            "/api"
+            "/api/camera"
     };
 
     @Bean
