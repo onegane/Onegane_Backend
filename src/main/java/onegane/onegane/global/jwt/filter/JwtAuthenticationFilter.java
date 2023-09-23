@@ -1,6 +1,7 @@
 package onegane.onegane.global.jwt.filter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import onegane.onegane.global.jwt.dto.TokenFilterResponse;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
@@ -39,8 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (accessToken != null ) {
             if (accessTokenResult != null && !accessTokenResult.getIsValid()) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, accessTokenResult.getMessage());
-                return;
+            log.info(accessTokenResult.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             } else {
                 Authentication authentication = jwtProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -48,7 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (refreshToken != null && (refreshTokenResult != null && !refreshTokenResult.getIsValid())) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, refreshTokenResult.getMessage());
+            log.info(refreshTokenResult.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 

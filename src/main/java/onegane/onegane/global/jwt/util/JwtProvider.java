@@ -86,7 +86,7 @@ public class JwtProvider {
         } catch (IllegalArgumentException | NullPointerException e) {
             return TokenFilterResponse.builder()
                     .isValid(false)
-                    .message("매개변수의 자료형이 잘못되었거나 존재하지 않습니다.")
+                    .message("토큰의 자료형이 잘못되었거나 존재하지 않습니다.")
                     .build();
         }
     }
