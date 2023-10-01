@@ -18,6 +18,6 @@ public class CameraDataController {
 
     @PutMapping
     public ResponseEntity<?> updateHistoryState(@RequestBody CameraDataRequest request) {
-        return ResponseEntity.ok(cameraDataService.save(request));
+        return ResponseEntity.ok(cameraDataService.execute(request));
     }
 }

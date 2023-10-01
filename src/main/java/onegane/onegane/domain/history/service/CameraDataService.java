@@ -16,7 +16,7 @@ public class CameraDataService {
     private final HistoryGetService historyGetService;
     private final HistoryInsertService historyInsertService;
 
-    public ResponseEntity<?> save(CameraDataRequest request) {
+    public ResponseEntity<?> execute(CameraDataRequest request) {
         String trackingNumber = request.getCode();
         History history = historyGetService.findByTrackingNumber(trackingNumber);
 
