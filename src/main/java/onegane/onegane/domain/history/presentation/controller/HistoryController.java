@@ -29,7 +29,7 @@ public class HistoryController{
     @PostMapping
     public ResponseEntity<?> insertHistory(HttpServletRequest request,
                                            @RequestBody NewHistoryRequestDto dto) {
-        return historyInsertService.insert(request, dto);
+        return historyInsertService.execute(request, dto);
     }
 
     @PutMapping("/{id}")

@@ -26,7 +26,7 @@ public class HistoryInsertService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public ResponseEntity<?> insert(HttpServletRequest request, NewHistoryRequestDto dto) {
+    public ResponseEntity<?> execute(HttpServletRequest request, NewHistoryRequestDto dto) {
         String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
         String email = jwtProvider.extractEmail(accessToken);
         Optional<User> getUser = userRepository.findByEmail(email);
