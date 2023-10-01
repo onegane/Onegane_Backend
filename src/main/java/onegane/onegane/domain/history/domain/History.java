@@ -38,9 +38,14 @@ public class History extends BaseTimeEntity {
         this.user = user;
     }
 
-    public History update(Long trackingNumber, String parcelNickname) {
+    public History updateInfo(Long trackingNumber, String parcelNickname) {
         this.trackingNumber = trackingNumber;
         this.parcelNickname = parcelNickname;
+        return this;
+    }
+
+    public History updateState(State state) {
+        this.state = state;
         return this;
     }
 }

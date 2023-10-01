@@ -1,6 +1,7 @@
 package onegane.onegane.domain.history.service;
 
 import lombok.RequiredArgsConstructor;
+import onegane.onegane.domain.history.domain.History;
 import onegane.onegane.domain.history.domain.State;
 import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
 import onegane.onegane.domain.history.presentation.dto.SaveHistoryResponseDto;
@@ -19,13 +20,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class HistoryInsertService {
 
     private final HistoryRepository historyRepository;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    @Transactional
     public ResponseEntity<?> execute(HttpServletRequest request, NewHistoryRequestDto dto) {
         String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
         String email = jwtProvider.extractEmail(accessToken);
@@ -44,5 +45,11 @@ public class HistoryInsertService {
                         .message("해당 유저가 존재하지 않습니다.")
                         .build()
                 );
+    }
+
+    public ResponseEntity<?> execute(History history) {
+        return ResponseEntity.ok(
+                historyRepository.save(history).getId()
+        );
     }
 }

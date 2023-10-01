@@ -48,4 +48,8 @@ public class HistoryGetService {
                         .build()
                 );
     }
+
+    public History findByTrackingNumber(String number) {
+        return historyRepository.findByTrackingNumber(Long.valueOf(number)).orElse(new History());
+    }
 }

@@ -26,7 +26,7 @@ public class HistoryUpdateService {
             History history = getHistory.get();
 
             return ResponseEntity.ok(
-                    historyRepository.save(history.update(dto.getTrackingNumber(), dto.getParcelNickname())).getId()
+                    historyRepository.save(history.updateInfo(dto.getTrackingNumber(), dto.getParcelNickname())).getId()
             );
         }
 

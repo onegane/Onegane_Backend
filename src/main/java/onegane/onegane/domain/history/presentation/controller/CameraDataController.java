@@ -17,7 +17,7 @@ public class CameraDataController {
     private final CameraDataService cameraDataService;
 
     @PostMapping
-    public ResponseEntity<String> saveTrackingNumber(@RequestBody CameraDataRequest request) {
+    public ResponseEntity<?> saveTrackingNumber(@RequestBody CameraDataRequest request) {
         return ResponseEntity.ok(cameraDataService.save(request));
     }
 }
