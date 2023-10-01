@@ -33,7 +33,7 @@ public class HistoryInsertService {
 
         if (getUser.isPresent()) {
             return ResponseEntity.ok(
-                new SaveHistoryResponseDto(historyRepository.save(dto.toEntity(getUser.get(), State.WAITING)))
+                new SaveHistoryResponseDto(historyRepository.save(dto.toEntity(getUser.get(), State.NOT_ARRIVED)))
             );
         }
 
