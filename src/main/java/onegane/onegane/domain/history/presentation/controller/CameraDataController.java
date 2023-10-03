@@ -1,7 +1,7 @@
 package onegane.onegane.domain.history.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
-import onegane.onegane.domain.history.presentation.dto.CameraDataRequest;
+import onegane.onegane.domain.history.presentation.dto.request.CameraDataRequest;
 import onegane.onegane.domain.history.service.CameraDataService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;

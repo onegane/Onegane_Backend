@@ -2,7 +2,7 @@ package onegane.onegane.domain.history.service;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
-import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
+import onegane.onegane.domain.history.presentation.dto.request.NewHistoryRequestDto;
 import onegane.onegane.domain.history.repository.HistoryRepository;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
 import org.springframework.http.HttpStatus;

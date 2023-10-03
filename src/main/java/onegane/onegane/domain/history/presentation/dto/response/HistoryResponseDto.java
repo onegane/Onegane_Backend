@@ -1,4 +1,4 @@
-package onegane.onegane.domain.history.presentation.dto;
+package onegane.onegane.domain.history.presentation.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

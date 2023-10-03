@@ -1,7 +1,7 @@
 package onegane.onegane.domain.history.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
-import onegane.onegane.domain.history.presentation.dto.NewHistoryRequestDto;
+import onegane.onegane.domain.history.presentation.dto.request.NewHistoryRequestDto;
 import onegane.onegane.domain.history.service.HistoryDeleteService;
 import onegane.onegane.domain.history.service.HistoryGetService;
 import onegane.onegane.domain.history.service.HistoryInsertService;

@@ -1,4 +1,4 @@
-package onegane.onegane.domain.history.presentation.dto;
+package onegane.onegane.domain.history.presentation.dto.request;
 
 import lombok.Getter;
 import onegane.onegane.domain.history.domain.History;

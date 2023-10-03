@@ -3,7 +3,7 @@ package onegane.onegane.domain.history.service;
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
 import onegane.onegane.domain.history.domain.State;
-import onegane.onegane.domain.history.presentation.dto.CameraDataRequest;
+import onegane.onegane.domain.history.presentation.dto.request.CameraDataRequest;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
