@@ -9,4 +9,5 @@ public class RedisConfig {
 
     private String host;
     private Integer port;
+    private String password;
 }
