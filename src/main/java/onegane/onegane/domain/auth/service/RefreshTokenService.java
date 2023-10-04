@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.auth.domain.RefreshToken;
 import onegane.onegane.domain.auth.repository.RefreshTokenRepository;
 import onegane.onegane.domain.user.service.GetUserOneService;
+import onegane.onegane.global.jwt.dto.NewAccessTokenResponse;
 import onegane.onegane.global.jwt.dto.TokenResponseDto;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.http.HttpStatus;
@@ -66,21 +67,20 @@ public class RefreshTokenService {
 
         if (getToken.get().getRefreshToken().equals(refreshToken)) {
             String newAccessToken = jwtProvider.createAccessToken(parsingEmail, userName);
-            String newRefreshToken = jwtProvider.createRefreshToken(parsingEmail, userName);
 
-            RefreshToken updateRefreshToken = getToken.get().update(newAccessToken, newRefreshToken);
+            RefreshToken updateRefreshToken = getToken.get().update(newAccessToken);
 
             refreshTokenRepository.save(updateRefreshToken);
 
             return ResponseEntity.ok(
-                    TokenResponseDto.builder()
+                    NewAccessTokenResponse.builder()
                         .accessToken(updateRefreshToken.getAccessToken())
-                        .refreshToken(updateRefreshToken.getRefreshToken())
                         .build()
             );
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body("토큰이 올바르지 않습니다.");
     }
 }
