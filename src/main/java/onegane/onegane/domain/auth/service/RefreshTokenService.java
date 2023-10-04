@@ -48,7 +48,7 @@ public class RefreshTokenService {
     @Transactional
     public ResponseEntity<?> updateAccessToken(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
-        String refreshToken = request.getHeader("Authorization_Refresh").split(" ")[1].trim();
+        String refreshToken = request.getHeader("Authorization-Refresh").split(" ")[1].trim();
 
         if (refreshTokenRepository.findByAccessToken(accessToken).isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
