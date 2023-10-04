@@ -14,4 +14,5 @@ public enum State {
     STATE_32,
     STATE_33,
     STATE_34,
+    STATE_ETC
 }
