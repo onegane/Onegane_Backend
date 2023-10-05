@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class CameraDataService {
 
     private final HistoryGetService historyGetService;
-    private final HistoryInsertService historyInsertService;
+    private final HistoryUpdateService historyUpdateService;
 
     public ResponseEntity<?> execute(CameraDataRequest request) {
         String trackingNumber = request.getCode();
@@ -36,7 +36,7 @@ public class CameraDataService {
         State state = State.valueOf("STATE_" + userGrade + userClassNo);
 
         return ResponseEntity.ok(
-                historyInsertService.execute(history.updateState(state))
+                historyUpdateService.update(history.updateState(state))
         );
     }
 }

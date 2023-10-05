@@ -1,7 +1,6 @@
 package onegane.onegane.domain.history.service;
 
 import lombok.RequiredArgsConstructor;
-import onegane.onegane.domain.history.domain.History;
 import onegane.onegane.domain.history.domain.State;
 import onegane.onegane.domain.history.presentation.dto.request.NewHistoryRequestDto;
 import onegane.onegane.domain.history.presentation.dto.response.SaveHistoryResponseDto;
@@ -45,11 +44,5 @@ public class HistoryInsertService {
                         .message("해당 유저가 존재하지 않습니다.")
                         .build()
                 );
-    }
-
-    public ResponseEntity<?> execute(History history) {
-        return ResponseEntity.ok(
-                historyRepository.save(history).getId()
-        );
     }
 }

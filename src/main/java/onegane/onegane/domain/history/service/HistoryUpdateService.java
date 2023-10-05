@@ -39,4 +39,10 @@ public class HistoryUpdateService {
                                 .build()
                 );
     }
+
+    public ResponseEntity<?> update(History history) {
+        return ResponseEntity.ok(
+                historyRepository.save(history).getId()
+        );
+    }
 }
