@@ -1,6 +1,5 @@
 package onegane.onegane.global.jwt.filter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
@@ -8,6 +7,7 @@ import onegane.onegane.global.jwt.dto.TokenFilterResponse;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -38,7 +38,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             TokenFilterResponse accessTokenResult = jwtProvider.isValid(accessToken);
 
             if (accessTokenResult != null && !accessTokenResult.getIsValid()) {
-                response.getWriter().write(getErrorResponse(response, accessTokenResult.getMessage()));
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setHeader("Content-Type", "application/json;charset=UTF-8");
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.setCharacterEncoding("UTF-8");
+                String responseDto = new ObjectMapper().writeValueAsString(
+                        ApiErrorResult.builder()
+                                .status(HttpStatus.FORBIDDEN.value())
+                                .summary("JWTException")
+                                .message(accessTokenResult.getMessage())
+                                .build()
+                );
+                response.getWriter().write(responseDto);
                 return;
             }
 
@@ -47,18 +58,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String getErrorResponse(HttpServletResponse response, String message) throws JsonProcessingException {
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        return new ObjectMapper().writeValueAsString(
-                ApiErrorResult.builder()
-                        .status(HttpStatus.FORBIDDEN.value())
-                        .summary("JWTException")
-                        .message(message)
-                        .build()
-        );
     }
 }
