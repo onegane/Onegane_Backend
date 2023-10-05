@@ -43,7 +43,8 @@ public class HistoryGetService {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ApiErrorResult.builder()
-                        .status("UserNotFound")
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .summary("UserNotFound")
                         .message("해당 유저가 존재하지 않습니다.")
                         .build()
                 );

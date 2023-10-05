@@ -7,6 +7,7 @@ import onegane.onegane.global.exception.domain.ApiErrorResult;
 import onegane.onegane.global.jwt.dto.TokenFilterResponse;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -49,12 +50,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getErrorResponse(HttpServletResponse response, String message) throws JsonProcessingException {
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         return new ObjectMapper().writeValueAsString(
                 ApiErrorResult.builder()
-                        .status("JWT ERROR")
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .summary("JWTException")
                         .message(message)
                         .build()
         );

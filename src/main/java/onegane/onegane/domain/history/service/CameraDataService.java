@@ -25,7 +25,8 @@ public class CameraDataService {
                     .status(HttpStatus.NOT_FOUND)
                     .body(
                             ApiErrorResult.builder()
-                                    .status("HistoryNotFound")
+                                    .status(HttpStatus.NOT_FOUND.value())
+                                    .summary("HistoryNotFound")
                                     .message("인식된 송장번호와 일치하는 내역이 없습니다.")
                                     .build()
                     );

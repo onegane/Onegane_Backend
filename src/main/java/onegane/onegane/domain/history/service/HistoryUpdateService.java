@@ -34,7 +34,8 @@ public class HistoryUpdateService {
                 .status(HttpStatus.NOT_FOUND)
                 .body(
                         ApiErrorResult.builder()
-                                .status("HistoryNotFound")
+                                .status(HttpStatus.NOT_FOUND.value())
+                                .summary("HistoryNotFound")
                                 .message("택배 내역이 존재하지 않습니다.")
                                 .build()
                 );
