@@ -18,7 +18,7 @@ public class History extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long trackingNumber;
+    private String trackingNumber;
 
     @Column(nullable = false)
     private String parcelNickname;
@@ -31,14 +31,14 @@ public class History extends BaseTimeEntity {
     private User user;
 
     @Builder
-    public History(Long trackingNumber, String parcelNickname, State state, User user) {
+    public History(String trackingNumber, String parcelNickname, State state, User user) {
         this.trackingNumber = trackingNumber;
         this.parcelNickname = parcelNickname;
         this.state = state;
         this.user = user;
     }
 
-    public History updateInfo(Long trackingNumber, String parcelNickname) {
+    public History updateInfo(String trackingNumber, String parcelNickname) {
         this.trackingNumber = trackingNumber;
         this.parcelNickname = parcelNickname;
         return this;

@@ -51,6 +51,6 @@ public class HistoryGetService {
     }
 
     public History findByTrackingNumber(String number) {
-        return historyRepository.findByTrackingNumber(Long.valueOf(number)).orElse(new History());
+        return historyRepository.findByTrackingNumber(number).orElse(null);
     }
 }

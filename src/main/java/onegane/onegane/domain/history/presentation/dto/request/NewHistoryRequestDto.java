@@ -8,7 +8,7 @@ import onegane.onegane.domain.user.domain.User;
 @Getter
 public class NewHistoryRequestDto {
 
-    private Long trackingNumber;
+    private String trackingNumber;
     private String parcelNickname;
 
     public History toEntity(User user, State state) {

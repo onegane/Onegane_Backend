@@ -8,7 +8,7 @@ import onegane.onegane.domain.history.domain.State;
 public class SaveHistoryResponseDto {
 
     private final Long id;
-    private final Long trackingNumber;
+    private final String trackingNumber;
     private final String parcelNickname;
     private final State state;
     private final Long userId;

@@ -12,5 +12,5 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
 
     List<History> findAllByUserId(Long userId);
 
-    Optional<History> findByTrackingNumber(Long trackingNumber);
+    Optional<History> findByTrackingNumber(String trackingNumber);
 }

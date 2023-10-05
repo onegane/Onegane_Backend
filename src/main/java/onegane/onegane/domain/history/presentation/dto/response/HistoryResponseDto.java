@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 public class HistoryResponseDto {
 
     private Long id;
-    private Long trackingNumber;
+    private String trackingNumber;
     private String parcelNickname;
     private State state;
     private LocalDateTime createdDate;
     private LocalDateTime getDate;
 
     @Builder
-    public HistoryResponseDto(Long id, Long trackingNumber, String parcelNickname, State state, LocalDateTime createdDate, LocalDateTime getDate) {
+    public HistoryResponseDto(Long id, String trackingNumber, String parcelNickname, State state, LocalDateTime createdDate, LocalDateTime getDate) {
         this.id = id;
         this.trackingNumber = trackingNumber;
         this.parcelNickname = parcelNickname;
