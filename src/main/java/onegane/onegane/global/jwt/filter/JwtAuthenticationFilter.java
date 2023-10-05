@@ -1,7 +1,9 @@
 package onegane.onegane.global.jwt.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import onegane.onegane.global.exception.domain.ApiErrorResult;
 import onegane.onegane.global.jwt.dto.TokenFilterResponse;
 import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,6 @@ import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
@@ -25,36 +26,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String authorizationHeader = request.getHeader("Authorization");
-        String authorizationRefreshHeader = request.getHeader("Authorization-Refresh");
 
         String accessToken = null;
-        String refreshToken = null;
 
-        if (authorizationHeader != null && authorizationRefreshHeader != null
-            && authorizationHeader.startsWith("Bearer ") && authorizationRefreshHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             accessToken = authorizationHeader.split(" ")[1].trim();
-            refreshToken = authorizationRefreshHeader.split(" ")[1].trim();
         }
 
-        TokenFilterResponse accessTokenResult = jwtProvider.isValid(accessToken);
-        TokenFilterResponse refreshTokenResult = jwtProvider.isValid(refreshToken);
+        if (accessToken != null) {
+            TokenFilterResponse accessTokenResult = jwtProvider.isValid(accessToken);
 
-        if (accessToken != null ) {
             if (accessTokenResult != null && !accessTokenResult.getIsValid()) {
-            log.info(accessTokenResult.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            } else {
-                Authentication authentication = jwtProvider.getAuthentication(accessToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                response.getWriter().write(getErrorResponse(response, accessTokenResult.getMessage()));
+                return;
             }
-        }
 
-        if (refreshToken != null && (refreshTokenResult != null && !refreshTokenResult.getIsValid())) {
-            log.info(refreshTokenResult.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            Authentication authentication = jwtProvider.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String getErrorResponse(HttpServletResponse response, String message) throws JsonProcessingException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        return new ObjectMapper().writeValueAsString(
+                ApiErrorResult.builder()
+                        .status("JWT ERROR")
+                        .message(message)
+                        .build()
+        );
     }
 }
