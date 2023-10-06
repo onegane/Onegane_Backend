@@ -15,7 +15,7 @@ public class ParcelSize {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "history_id", unique = true)
     private History history;
 
