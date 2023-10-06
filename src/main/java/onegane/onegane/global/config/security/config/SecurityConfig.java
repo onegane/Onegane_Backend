@@ -21,16 +21,10 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private final String[] authenticationList = {
-            "/api/user/**",
-            "/api/number",
-            "/api/number/**",
-            "/api/auth/logout"
-    };
-
     private final String[] whiteList = {
             "/api/auth/bsm",
-            "/api/camera"
+            "/api/camera",
+            "/api/parcel",
     };
 
     @Bean
@@ -45,7 +39,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                     .antMatchers(whiteList).permitAll()
-                    .antMatchers(authenticationList).hasRole("USER")
                     .anyRequest().authenticated()
                 .and()
 
