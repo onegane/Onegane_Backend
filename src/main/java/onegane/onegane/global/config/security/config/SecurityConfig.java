@@ -25,6 +25,7 @@ public class SecurityConfig {
             "/api/auth/bsm",
             "/api/camera",
             "/api/parcel",
+            "/api/parcel/**"
     };
 
     @Bean
