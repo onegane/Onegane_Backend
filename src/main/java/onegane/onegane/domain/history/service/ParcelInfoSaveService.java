@@ -18,6 +18,7 @@ public class ParcelInfoSaveService {
     private final HistoryGetService historyGetService;
     private final HistoryUpdateService historyUpdateService;
     private final ParcelSizeRepository parcelSizeRepository;
+    private final CaseSizeService caseSizeService;
 
     public ResponseEntity<?> execute(ParcelInfoSaveRequest request) {
         String trackingNumber = request.getNumber();
@@ -47,7 +48,7 @@ public class ParcelInfoSaveService {
                     );
         }
 
-        parcelSizeRepository.save(
+        ParcelSize parcelSize = parcelSizeRepository.save(
                 ParcelSize.builder()
                         .history(history)
                         .x(request.getX())
@@ -59,8 +60,12 @@ public class ParcelInfoSaveService {
         Integer userClassNo = history.getUser().getClassNo();
         State state = State.valueOf("STATE_" + userGrade + userClassNo);
 
+        History updateHistory = (History) historyUpdateService.update(history.updateState(state)).getBody();
+
+        caseSizeService.updateOrSave(parcelSize, updateHistory);
+
         return ResponseEntity.ok(
-                historyUpdateService.update(history.updateState(state))
+                "success"
         );
     }
 }

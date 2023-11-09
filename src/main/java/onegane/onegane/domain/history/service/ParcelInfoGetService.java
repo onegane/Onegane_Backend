@@ -15,6 +15,7 @@ public class ParcelInfoGetService {
 
     private final ParcelSizeRepository parcelSizeRepository;
     private final HistoryGetService historyGetService;
+    private final CaseSizeService caseSizeService;
 
     public ResponseEntity<?> execute(String parcelNumber) {
         History history = historyGetService.findByTrackingNumber(parcelNumber);
@@ -32,7 +33,11 @@ public class ParcelInfoGetService {
         }
 
         return ResponseEntity.ok(
-                new ParcelInfoResponse(history, parcelSizeRepository.findByHistory(history))
+                new ParcelInfoResponse(
+                        history,
+                        parcelSizeRepository.findByHistory(history),
+                        caseSizeService.get(history.getState())
+                )
         );
     }
 }
