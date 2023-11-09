@@ -23,16 +23,12 @@ public class ParcelSize {
     private Integer x;
 
     @Column(nullable = false)
-    private Integer y;
-
-    @Column(nullable = false)
     private Integer z;
 
     @Builder
-    public ParcelSize(History history, Integer x, Integer y, Integer z) {
+    public ParcelSize(History history, Integer x, Integer z) {
         this.history = history;
         this.x = x;
-        this.y = y;
         this.z = z;
     }
 }

@@ -10,13 +10,11 @@ public class ParcelInfoResponse {
 
     private final State state;
     private final Integer x;
-    private final Integer y;
     private final Integer z;
 
     public ParcelInfoResponse(History history, ParcelSize parcelSize) {
         this.state = history.getState();
         this.x = parcelSize.getX();
-        this.y = parcelSize.getY();
         this.z = parcelSize.getZ();
     }
 }

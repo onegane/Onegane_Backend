@@ -51,7 +51,6 @@ public class ParcelInfoSaveService {
                 ParcelSize.builder()
                         .history(history)
                         .x(request.getX())
-                        .y(request.getY())
                         .z(request.getZ())
                         .build()
         );

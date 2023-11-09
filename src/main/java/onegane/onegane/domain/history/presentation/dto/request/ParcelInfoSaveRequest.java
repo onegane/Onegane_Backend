@@ -7,6 +7,5 @@ public class ParcelInfoSaveRequest {
 
     private String number;
     private Integer x;
-    private Integer y;
     private Integer z;
 }
