@@ -6,6 +6,4 @@ import lombok.Getter;
 public class ParcelInfoSaveRequest {
 
     private String number;
-    private Integer x;
-    private Integer z;
 }

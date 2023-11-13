@@ -2,10 +2,8 @@ package onegane.onegane.domain.history.service;
 
 import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
-import onegane.onegane.domain.history.domain.ParcelSize;
 import onegane.onegane.domain.history.domain.State;
 import onegane.onegane.domain.history.presentation.dto.request.ParcelInfoSaveRequest;
-import onegane.onegane.domain.history.repository.ParcelSizeRepository;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +15,6 @@ public class ParcelInfoSaveService {
 
     private final HistoryGetService historyGetService;
     private final HistoryUpdateService historyUpdateService;
-    private final ParcelSizeRepository parcelSizeRepository;
-    private final CaseSizeService caseSizeService;
 
     public ResponseEntity<?> execute(ParcelInfoSaveRequest request) {
         String trackingNumber = request.getNumber();
@@ -48,24 +44,12 @@ public class ParcelInfoSaveService {
                     );
         }
 
-        ParcelSize parcelSize = parcelSizeRepository.save(
-                ParcelSize.builder()
-                        .history(history)
-                        .x(request.getX())
-                        .z(request.getZ())
-                        .build()
-        );
-
         Integer userGrade = history.getUser().getGrade();
         Integer userClassNo = history.getUser().getClassNo();
         State state = State.valueOf("STATE_" + userGrade + userClassNo);
 
-        History updateHistory = (History) historyUpdateService.update(history.updateState(state)).getBody();
+        historyUpdateService.update(history.updateState(state));
 
-        caseSizeService.updateOrSave(parcelSize, updateHistory);
-
-        return ResponseEntity.ok(
-                "success"
-        );
+        return ResponseEntity.ok(state);
     }
 }

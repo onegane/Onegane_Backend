@@ -41,9 +41,7 @@ public class HistoryUpdateService {
                 );
     }
 
-    public ResponseEntity<?> update(History history) {
-        return ResponseEntity.ok(
-                historyRepository.save(history)
-        );
+    public History update(History history) {
+        return historyRepository.save(history);
     }
 }

@@ -5,17 +5,13 @@ import onegane.onegane.domain.history.domain.State;
 import onegane.onegane.domain.history.presentation.dto.request.NewHistoryRequestDto;
 import onegane.onegane.domain.history.presentation.dto.response.SaveHistoryResponseDto;
 import onegane.onegane.domain.history.repository.HistoryRepository;
-import onegane.onegane.domain.user.domain.User;
-import onegane.onegane.domain.user.repository.UserRepository;
+import onegane.onegane.domain.user.service.GetUserOneService;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
-import onegane.onegane.global.jwt.util.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,27 +19,32 @@ import java.util.Optional;
 public class HistoryInsertService {
 
     private final HistoryRepository historyRepository;
-    private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
+    private final GetUserOneService getUserOneService;
 
-    public ResponseEntity<?> execute(HttpServletRequest request, NewHistoryRequestDto dto) {
-        String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
-        String email = jwtProvider.extractEmail(accessToken);
-        Optional<User> getUser = userRepository.findByEmail(email);
+    public ResponseEntity<?> execute(NewHistoryRequestDto dto) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if (getUser.isPresent()) {
-            return ResponseEntity.ok(
-                new SaveHistoryResponseDto(historyRepository.save(dto.toEntity(getUser.get(), State.NOT_ARRIVED)))
-            );
+        if (historyRepository.existsByTrackingNumber(dto.getTrackingNumber())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(
+                            ApiErrorResult.builder()
+                                    .status(HttpStatus.NOT_FOUND.value())
+                                    .summary("AlreadyExistTrackingNumber")
+                                    .message("이미 존재하는 송장번호 입니다.")
+                                    .build()
+                    );
         }
 
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(ApiErrorResult.builder()
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .summary("UserNotFound")
-                        .message("해당 유저가 존재하지 않습니다.")
-                        .build()
+                .status(HttpStatus.OK)
+                .body(
+                        new SaveHistoryResponseDto(
+                                historyRepository.save(
+                                        dto.toEntity(getUserOneService.execute(email),
+                                                State.NOT_ARRIVED)
+                                )
+                        )
                 );
     }
 }
