@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import onegane.onegane.domain.history.domain.History;
 import onegane.onegane.domain.history.domain.State;
 import onegane.onegane.domain.history.presentation.dto.request.ParcelInfoSaveRequest;
+import onegane.onegane.domain.history.presentation.dto.response.ParcelPositionResponse;
 import onegane.onegane.global.exception.domain.ApiErrorResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,8 @@ public class ParcelInfoSaveService {
 
         historyUpdateService.update(history.updateState(state));
 
-        return ResponseEntity.ok(state);
+        return ResponseEntity.ok(
+                new ParcelPositionResponse(state.toString().replace("STATE_", ""))
+        );
     }
 }
